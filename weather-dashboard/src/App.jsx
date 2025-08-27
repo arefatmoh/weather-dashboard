@@ -1,16 +1,15 @@
 import { useState } from "react";
 import SearchBar from "./components/SearchBar";
+import WeatherCard from "./components/WeatherCard";
 import { fetchWeather } from "./services/weatherService";
 
 function App() {
-  const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState("");
 
-  const handleSearch = async (searchValue) => {
-    setCity(searchValue);
+  const handleSearch = async (city) => {
     setError("");
-    const data = await fetchWeather(searchValue);
+    const data = await fetchWeather(city);
     if (data) {
       setWeather(data);
     } else {
@@ -25,14 +24,7 @@ function App() {
       <SearchBar onSearch={handleSearch} />
 
       {error && <p className="text-red-200 mt-4">{error}</p>}
-
-      {weather && (
-        <div className="mt-6 bg-white rounded-xl shadow-lg p-6 text-center">
-          <h2 className="text-2xl font-semibold">{weather.name}</h2>
-          <p className="text-lg">{weather.weather[0].description}</p>
-          <p className="text-3xl font-bold">{Math.round(weather.main.temp)}°C</p>
-        </div>
-      )}
+      {weather && <WeatherCard data={weather} />}
     </div>
   );
 }
