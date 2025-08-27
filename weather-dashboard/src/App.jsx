@@ -1,23 +1,40 @@
 import { useState } from "react";
 import SearchBar from "./components/SearchBar";
 import WeatherCard from "./components/WeatherCard";
-import { fetchWeather } from "./services/weatherService";
+import ForecastCard from "./components/ForecastCard";
+import { fetchWeather, fetchForecast } from "./services/weatherService";
 
 function App() {
   const [weather, setWeather] = useState(null);
+  const [forecast, setForecast] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (city) => {
     setError("");
     setLoading(true);
+
     const data = await fetchWeather(city);
+    const forecastData = await fetchForecast(city);
     setLoading(false);
 
-    if (data) {
+    if (data && forecastData) {
       setWeather(data);
+
+      // take one forecast per day (midday)
+      const daily = forecastData.list.filter((item) =>
+        item.dt_txt.includes("12:00:00")
+      ).map((item) => ({
+        date: new Date(item.dt_txt).toLocaleDateString("en-US", { weekday: "short" }),
+        temp: Math.round(item.main.temp),
+        description: item.weather[0].description,
+        icon: item.weather[0].icon,
+      }));
+
+      setForecast(daily);
     } else {
       setWeather(null);
+      setForecast([]);
       setError("City not found. Try again.");
     }
   };
@@ -29,7 +46,16 @@ function App() {
 
       {loading && <p className="text-white mt-4 animate-pulse">Loading...</p>}
       {error && <p className="text-red-200 mt-4">{error}</p>}
-      {weather && !loading && <WeatherCard data={weather} />}
+      {weather && !loading && (
+        <>
+          <WeatherCard data={weather} />
+          <div className="mt-6 flex gap-4 overflow-x-auto w-full justify-center">
+            {forecast.map((f, index) => (
+              <ForecastCard key={index} forecast={f} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
