@@ -3,6 +3,7 @@ import SearchBar from "./components/SearchBar";
 import WeatherCard from "./components/WeatherCard";
 import ForecastCard from "./components/ForecastCard";
 import { fetchWeather, fetchForecast } from "./services/weatherService";
+import ThemeToggle from "./components/ThemeToggle";
 
 function App() {
   const [weather, setWeather] = useState(null);
@@ -40,8 +41,9 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 to-indigo-600 flex flex-col items-center p-6">
-      <h1 className="text-4xl font-bold text-white mb-6">🌤️ Weather Dashboard</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-400 to-indigo-600 dark:from-gray-900 dark:to-gray-800 flex flex-col items-center p-6">
+      <h1 className="text-4xl font-bold text-white dark:text-yellow-300 mb-6">🌤️ Weather Dashboard</h1>
+      <ThemeToggle />
       <SearchBar onSearch={handleSearch} />
 
       {loading && <p className="text-white mt-4 animate-pulse">Loading...</p>}
