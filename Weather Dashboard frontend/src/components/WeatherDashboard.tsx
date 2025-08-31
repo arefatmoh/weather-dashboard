@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, ArrowLeft, RefreshCw } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import WeatherCard from './WeatherCard';
+import WeeklyForecast from './WeeklyForecast';
 
 // Define the weather data structure
 interface WeatherData {
@@ -18,13 +19,36 @@ interface WeatherData {
 
 interface WeatherDashboardProps {
   weather: WeatherData;
+  weeklyForecast?: Array<{
+    date: string;
+    day: string;
+    high: number;
+    low: number;
+    condition: string;
+    icon: string;
+    description: string;
+  }>;
   onSearch: (city: string) => void;
   onBack: () => void;
+  onRefresh?: () => void; // Add refresh functionality
 }
 
-const WeatherDashboard = ({ weather, onSearch, onBack }: WeatherDashboardProps) => {
+const WeatherDashboard = ({ weather, weeklyForecast, onSearch, onBack, onRefresh }: WeatherDashboardProps) => {
   // State to store the search input
   const [searchQuery, setSearchQuery] = useState('');
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+  
+  // Auto-refresh weather data every 5 minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (onRefresh) {
+        onRefresh();
+        setLastUpdated(new Date());
+      }
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(interval);
+  }, [onRefresh]);
 
   // Function to handle search button click
   const handleSearch = () => {
@@ -42,20 +66,11 @@ const WeatherDashboard = ({ weather, onSearch, onBack }: WeatherDashboardProps) 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* Header with search bar */}
-      <div className="bg-white/80 backdrop-blur-sm shadow-lg p-6">
-        <div className="max-w-6xl mx-auto flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onBack}
-            className="md:hidden hover:bg-blue-50 rounded-full p-2"
-          >
-            <ArrowLeft className="w-5 h-5 text-blue-600" />
-          </Button>
-          
+      {/* Search bar section */}
+      <div className="bg-white/80 backdrop-blur-sm shadow-lg p-6 mt-4">
+        <div className="max-w-4xl mx-auto flex items-center gap-4">
           <div className="flex-1 flex gap-3">
-            <div className="relative flex-1">
+            <div className="relative flex-1 max-w-md">
               <Input
                 type="text"
                 placeholder="Search another city..."
@@ -80,16 +95,38 @@ const WeatherDashboard = ({ weather, onSearch, onBack }: WeatherDashboardProps) 
       </div>
 
       {/* Weather content with improved spacing */}
-      <div className="max-w-6xl mx-auto p-6 pt-16">
+      <div className="max-w-6xl mx-auto p-6 pt-8">
         <div className="flex justify-center">
           <WeatherCard weather={weather} />
         </div>
         
-        {/* Additional info section */}
-        <div className="mt-12 text-center">
+        {/* Weekly Forecast */}
+        {weeklyForecast && weeklyForecast.length > 0 && (
+          <div className="mt-12">
+            <WeeklyForecast forecast={weeklyForecast} />
+          </div>
+        )}
+        
+        {/* Additional info section with refresh functionality */}
+        <div className="mt-12 text-center space-y-4">
           <div className="inline-flex items-center gap-2 text-gray-600 bg-white/60 backdrop-blur-sm px-6 py-3 rounded-full">
             <RefreshCw className="w-4 h-4" />
-            <span className="text-sm">Weather data updates in real-time</span>
+            <span className="text-sm">Weather data updates automatically every 5 minutes</span>
+          </div>
+          
+          {/* Manual refresh button and last updated info */}
+          <div className="flex flex-col items-center gap-3">
+            <Button 
+              onClick={onRefresh}
+              variant="outline"
+              className="bg-white/80 hover:bg-white border-blue-200 text-blue-600 hover:text-blue-700"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh Now
+            </Button>
+            <p className="text-sm text-gray-500">
+              Last updated: {lastUpdated.toLocaleTimeString()}
+            </p>
           </div>
         </div>
       </div>

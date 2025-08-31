@@ -70,26 +70,26 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
         </div>
         
         {/* Weather description */}
-        <p className="text-xl text-gray-600 mb-4 capitalize font-medium">
+        <p className="text-xl text-gray-700 dark:text-gray-200 mb-4 capitalize font-medium">
           {weather.description}
         </p>
         
         {/* Feels like temperature */}
-        <p className="text-lg text-gray-500 mb-6">
-          Feels like <span className="font-semibold">{weather.feelsLike}°</span>
+        <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+          Feels like <span className="font-semibold text-gray-800 dark:text-gray-100">{weather.feelsLike}°</span>
         </p>
         
         {/* Weather details with icons */}
-        <div className="grid grid-cols-2 gap-6 pt-6 border-t border-gray-200">
-          <div className="flex flex-col items-center p-4 bg-blue-50 rounded-xl">
+        <div className="grid grid-cols-2 gap-6 pt-6 border-t border-gray-200 dark:border-gray-600">
+          <div className="flex flex-col items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
             <Droplets className="w-8 h-8 text-blue-500 mb-2" />
-            <span className="text-sm text-gray-600">Humidity</span>
-            <span className="text-lg font-semibold text-gray-800">{weather.humidity}%</span>
+            <span className="text-sm text-gray-700 dark:text-gray-200">Humidity</span>
+            <span className="text-lg font-semibold text-gray-800 dark:text-gray-100">{weather.humidity}%</span>
           </div>
-          <div className="flex flex-col items-center p-4 bg-indigo-50 rounded-xl">
+          <div className="flex flex-col items-center p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl">
             <Wind className="w-8 h-8 text-indigo-500 mb-2" />
-            <span className="text-sm text-gray-600">Wind Speed</span>
-            <span className="text-lg font-semibold text-gray-800">{weather.windSpeed} mph</span>
+            <span className="text-sm text-gray-700 dark:text-gray-200">Wind Speed</span>
+            <span className="text-lg font-semibold text-gray-800 dark:text-gray-100">{weather.windSpeed} mph</span>
           </div>
         </div>
       </CardContent>

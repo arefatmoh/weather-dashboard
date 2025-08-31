@@ -41,20 +41,11 @@ const SearchResult = ({ weather, error, onSearch, onBack }: SearchResultProps) =
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* Header with search bar */}
-      <div className="bg-white/80 backdrop-blur-sm shadow-lg p-6">
-        <div className="max-w-6xl mx-auto flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onBack}
-            className="md:hidden hover:bg-blue-50 rounded-full p-2"
-          >
-            <ArrowLeft className="w-5 h-5 text-blue-600" />
-          </Button>
-          
+      {/* Search bar section */}
+      <div className="bg-white/80 backdrop-blur-sm shadow-lg p-6 mt-4">
+        <div className="max-w-4xl mx-auto flex items-center gap-4">
           <div className="flex-1 flex gap-3">
-            <div className="relative flex-1">
+            <div className="relative flex-1 max-w-md">
               <Input
                 type="text"
                 placeholder="Search another city..."
@@ -63,7 +54,7 @@ const SearchResult = ({ weather, error, onSearch, onBack }: SearchResultProps) =
                 onKeyPress={handleKeyPress}
                 className="w-full h-14 pl-5 pr-14 bg-white border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-xl transition-all duration-200"
               />
-              <Search className="absolute right-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute right-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
             </div>
             
             <Button 
@@ -79,7 +70,7 @@ const SearchResult = ({ weather, error, onSearch, onBack }: SearchResultProps) =
       </div>
 
       {/* Content with improved spacing */}
-      <div className="max-w-6xl mx-auto p-6 pt-16">
+      <div className="max-w-6xl mx-auto p-6 pt-8">
         <div className="flex justify-center">
           {weather && <WeatherCard weather={weather} />}
           
